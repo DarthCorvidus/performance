@@ -12,6 +12,17 @@ Description:
  - methodChanged:   Instance state is changed by additional call
  - methodRenew:     New instance is constructed on every loop
 
+Native is of course fastest, PHP knows it's own method. Even a function wrapper
+increases call time up to four times, but methodSame/methodStatic do not improve
+that by a large margin. methodChange adds another function call, which only
+about doubles the time.
+methodRenew however is dreadful, as it has to create an instance on every loop.
+
+Proper object oriented design comes with a cost, but "recycling" of objects
+should be considered where there is no risk of side effects.
+Using call_user_func adds additional weight, but there are a lot of other
+reasons why you should NEVER use callback and opt for proper observers instead.
+ 
 <?php
 use plibv4\profiler\Profiler;
 require_once __DIR__."/../vendor/autoload.php";
